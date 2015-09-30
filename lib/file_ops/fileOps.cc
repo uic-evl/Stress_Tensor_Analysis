@@ -230,8 +230,16 @@ void readEigenvectorField(std::string path){
 	p = path.substr(0, pos);
 	p.append("eigenVector.raw");
 	
-	eigenVectors = (Vector ***)AllocArray3D(slices, rows, cols, sizeof(Vector) ) ;	
+	//eigenVectors = (Vector ***)AllocArray3D(slices, rows, cols, sizeof(Vector) ) ;	
 	
+	eigenVectors  = (Vector***) calloc(slices * sizeof(Vector**),1);
+	for(int i = 0; i < slices; i++){
+		eigenVectors[i] = (Vector**)calloc(rows * sizeof(Vector*), 1);
+		for(int j = 0; j < rows; j++){
+			eigenVectors[i][j] = (Vector*)calloc(cols*sizeof(Vector),1);
+		}
+	}
+
 	FILE* fin = fopen(p.c_str(),"rb") ;
 	if(fin == NULL){
 		printf("Can't open eigen vector file.\n") ;
@@ -306,7 +314,18 @@ void readEigenValues(std::string path){
 	
 	 int u = 0, v = 0, w = 0;
 	
-	eigenValues = (Vector ***)AllocArray3D(slices, rows, cols, sizeof(Vector) ) ;	
+	std::cout << slices << " " << rows << " " << cols << " "  << sizeof(Vector) << std::endl;
+
+	eigenValues = (Vector***) calloc(slices * sizeof(Vector**),1);
+	for(int i = 0; i < slices; i++){
+		eigenValues[i] = (Vector**)calloc(rows * sizeof(Vector*), 1);
+		for(int j = 0; j < rows; j++){
+			eigenValues[i][j] = (Vector*)calloc(cols*sizeof(Vector),1);
+		}
+	}
+	//eigenValues = (Vector ***)AllocArray3D(slices, rows, cols, sizeof(Vector) ) ;	
+
+	std::cout << sizeof(eigenValues) << std::endl;
 //	eigenfloats= (GLfloat*)malloc(slices * rows * cols * 3 * sizeof(GLfloat) );
 	FILE* fin = fopen(p.c_str(),"rb") ;
 
@@ -357,8 +376,16 @@ void readEigenValues(std::string path){
 		for(int i = 0 ; i < rows ; i++){			// ipVolSize.y
 			for(int j = 0 ; j < cols ;  j++){		// ipVolSize.x
 				tupleIndex = k*rows*cols + i * cols + j ;
+				
+				// std::cout << i << " " << j << " " << k << std::endl;
+				// std::cout << tupleIndex << std::endl;
+
+				// std::cout << velU[tupleIndex] << std::endl;
+				// std::cout << velV[tupleIndex] << std::endl;
+				// std::cout << velW[tupleIndex] << std::endl;
+
 				eigenValues[k][i][j] = new Vector(velU[tupleIndex],velV[tupleIndex],velW[tupleIndex]) ;
-	//			printf("Eigen Values %f %f %f\n",velU[tupleIndex],velV[tupleIndex],velW[tupleIndex]);
+				//printf("Eigen Values %f %f %f\n",velU[tupleIndex],velV[tupleIndex],velW[tupleIndex]);
 			}
 		 }
 	 }

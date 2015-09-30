@@ -6,18 +6,18 @@
 void VolumeRenderer::Initialize(std::string szp, int width, int type){ 
 
 	this->params.LoadParameters(szp);							// load the parameter object   
-	this->volumeImg.LoadCtSansInterpolation(params.CtFileName,				// volume filename   
-                                   params.CtFileSize,						// volume filesize
-                                   params.CtFileVoxelSpacing,				// voxel size
-                                   	params.CtSamplingInterval);				// sampling interval
+	// this->volumeImg.LoadCtSansInterpolation(params.CtFileName,				// volume filename   
+ //                                   params.CtFileSize,						// volume filesize
+ //                                   params.CtFileVoxelSpacing,				// voxel size
+ //                                   	params.CtSamplingInterval);				// sampling interval
 
-   	volumeImg.vPosition    = new Vector(0, 0, 0);				// translation and
-	volumeImg.vOrientation = new Vector(0, 0, 0);				// rotation of the volume
-	volumeImg.ComputeTransforms();								// calculate the Vol-to-world and world-to-Vol transform matrices
+ //   	volumeImg.vPosition    = new Vector(0, 0, 0);				// translation and
+	// volumeImg.vOrientation = new Vector(0, 0, 0);				// rotation of the volume
+	// volumeImg.ComputeTransforms();								// calculate the Vol-to-world and world-to-Vol transform matrices
 	this->projectionWidth = width;
 	this->projectionHeight = width ;
 	this->InitializeProjector(type) ;											// set projector specs
-	this->BuildColorBar() ; 
+	// this->BuildColorBar() ; 
 
 }
 

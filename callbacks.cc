@@ -605,11 +605,13 @@ void display()
 	glPushMatrix();
 	glMatrixMode(GL_MODELVIEW) ;
 	glLoadIdentity ();             /* clear the matrix */
-           
+      
+      	std::cout << "display before lookat" << std::endl;
+
 /* viewing transformation  */
 	gluLookAt(0.0, 0.0, volRenderer.projector.vSourceLocation.VectorZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	
-	volRenderer.RenderVolImage() ;			// render the volume image 
+	//volRenderer.RenderVolImage() ;			// render the volume image 
 	
 	glClear(GL_DEPTH_BUFFER_BIT) ;			// so that this volume image does not block other objects
 											// Since we have enabled depth test	
@@ -628,7 +630,9 @@ void display()
 	float tz = (slices)*boxLenZ/2 ;
 	float ty = (rows)*boxLenY/2 ;
 	float tx = (cols)*boxLenX/2 ;		
-		
+	
+	std::cout << "display after box" << std::endl;
+
 	glTranslatef(-tx, -ty, -tz) ;
 
 	streamlines.RenderStreamlines(eigenfloats) ;		// display streamlines

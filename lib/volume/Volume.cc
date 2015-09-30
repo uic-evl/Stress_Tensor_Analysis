@@ -1,7 +1,7 @@
-/* this file has been taken from MTW project		*/
-/* I modified the file as needed. There have been	*/
-/* a lot of changes. I didn't change the comments.	*/
-/* So, some comments may be misleading.				*/		
+/* this file has been taken from MTW project        */
+/* I modified the file as needed. There have been   */
+/* a lot of changes. I didn't change the comments.  */
+/* So, some comments may be misleading.             */      
 
 
 // This class supports the loading and handling of a volume of CT-scan data.
@@ -12,7 +12,6 @@
 
 #define _USE_MATH_DEFINES
 
-#include <iostream>
 #include "math.h"
 #include "Volume.hh"
 #include "../std/AllocArray.hh"
@@ -24,7 +23,11 @@ Volume::Volume(void)
 }
 
 Volume::~Volume(void)
-{}
+{
+
+//    delete(usCtVol);
+
+}
 
 
 void Volume::ComputeTransforms(void)
@@ -97,17 +100,15 @@ void Volume::LoadCtSansInterpolation(char*   szInFileName,
     this->ipStretch         = iPoint(1,1,1);            // these data will be ignored anyway.
     // allocate the main volume image array
     this->ipVolSize = ipDimensions; // the volume dimensions are the same as the input CT file
-    this->usCtVol   = /*new u_short**[ipVolSize.x];*/(u_short***)AllocArray3D(ipVolSize.z,
+    this->usCtVol;/* = new u_short**[ipVolSize.z];/*(unsigned short***)AllocArray3D(ipVolSize.z,
                                                ipVolSize.y,
                                                ipVolSize.x,
-                                               sizeof(u_short)); 
-/*
-	for(int ii = 0; ii <= ipVolSize.x; ii++){
-		this->usCtVol[ii] = new u_short*[ipVolSize.y];
-		for(int jj = 0; jj <= ipVolSize.y; jj++)
-			this->usCtVol[ii][jj] = new u_short[ipVolSize.z];
-	}
-*/
+                                               sizeof(u_short)); */
+ /*   for(int ii = 0; ii < ipVolSize.z; ii++){
+        this->usCtVol[ii] = new u_short*[ipVolSize.y];
+        for(int jj = 0; jj < ipVolSize.y; jj++)
+            this->usCtVol[ii][jj] = new u_short[ipVolSize.x];
+    } */
 
     {
         // open the input file
@@ -120,35 +121,16 @@ void Volume::LoadCtSansInterpolation(char*   szInFileName,
         {
             FATAL_ERROR("std error\n");
         }
-
-        // for(i = 0; i < ipVolSize.x; i++)
-        // {
-        //     for (j = 0; j < ipVolSize.y; j++)
-        //     {
-        //         for (k = 0; k< ipVolSize.z; k++)
-        //         {      
-        //             u_short temp;
-        //                         size_t stRead = fread(  &temp,
-        //                             sizeof(u_short),
-        //                             1,
-        //                             fpIn);
-        //             std::cout << temp << std::endl;
-        //         }
-        //     }
-        // }
-
         // read the file one plane at a time and load them in reverse order so as to match the projector geometry
         for (k=0; k<=(ipVolSize.z-1); k++)
         {
-            size_t stRead = fread(  &usCtVol[k][0][0],
-                                    sizeof(u_short),
+            size_t stRead = fread( &usCtVol[k][0][0],
+                                    sizeof(unsigned short),
                                     ipVolSize.x * ipVolSize.y,
                                     fpIn);
-            std::cout << stRead << std::endl;
-            
+
             if ((int)stRead != (ipVolSize.x * ipVolSize.y))
             {
-                printf("%d\n", (int)ipVolSize.x * ipVolSize.y );
                 // short read -- this is a problem
                 FATAL_ERROR("Premature end-of-file on the CT volume");
             }
@@ -157,9 +139,9 @@ void Volume::LoadCtSansInterpolation(char*   szInFileName,
         fclose(fpIn);
     }   // else// if (! bFileIsTiff) 
 
-	vOrigin = new Vector( (float)(ipVolSize.x)/2.0, 
-						(float)(ipVolSize.y)/2.0,
-						(float)(ipVolSize.z)/2.0) ;
+    vOrigin = new Vector( (float)(ipVolSize.x)/2.0, 
+                        (float)(ipVolSize.y)/2.0,
+                        (float)(ipVolSize.z)/2.0) ;
     vMinNonzeroPlanes = new Vector(0.0,0.0,0.0);
     vMaxNonzeroPlanes = new Vector(ipVolSize.x-1 ,ipVolSize.y-1 ,ipVolSize.z-1);
 

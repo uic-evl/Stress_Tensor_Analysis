@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <cstdint>
 #include <assert.h>
 #include <math.h>
 
@@ -59,7 +60,6 @@ void** AllocArray2D(int nRows,
 
     return vppArray;
 }
-
 
 void*** AllocArray3D(int nPlanes,
                      int nRows,
@@ -128,11 +128,11 @@ void*** AllocArray3D(int nPlanes,
     vppRowTable = (void**) &vpppArray[nPlanes];             // start just past the plane table
     cpData      = (char*)  &vppRowTable[nPlanes * nRows];   // start just past the row table
 
-	// align the start of the data table with the cache boundaries (round-up to a multiple of 64)
+    // align the start of the data table with the cache boundaries (round-up to a multiple of 64)
     cpData += 63;
 #ifdef _X64_COMPILER
     cpData  = (char*)(((__int64)cpData) & 0xffffffffffffffc0);  // round back to 64-byte boundary
-	printf("64 bit son!\n");
+    printf("64 bit son!\n");
 #else
     cpData  = (char*)(((uintptr_t)cpData) & 0xffffffc0);     // round back to 64-byte boundary
 #endif
@@ -171,8 +171,6 @@ AlternativeAllocationMethod:
     }
 #endif
 }
-
-
 
 // convert an integer into a comma-separated ASCII string
 char* Comma(int iValue)

@@ -122,7 +122,7 @@ bool createWindow(int argc, char ** argv)
 void startApplication(int argc, char ** argv)
 {
 	readData() ;			// read a vector field of size slices, rows AND cols
-	read_spec("/Users/onorinbejasus/Dropbox/Vis/Projects/CombustionProject/Tensor");
+	read_spec("/Users/timothy/Dropbox/EVL/projects/Stress_Tensor_Analysis/spec");
 	lighting_setup();
 	
 	double boxLenX = volRenderer.params.CtFileVoxelSpacing.VectorX ;
@@ -182,9 +182,9 @@ bool initGL(int argc, char **argv)
 	}
 		
   	glClearColor (0.0, 0.0, 0.0, 0.0);
-    glShadeModel(GL_SMOOTH);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_DEPTH_TEST);
+    	glShadeModel(GL_SMOOTH);
+   	glDepthFunc(GL_LESS);
+      glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_BLEND) ;
 	glEnable(GL_LINE_SMOOTH) ;
 	glEnable(GL_POINT_SMOOTH) ;

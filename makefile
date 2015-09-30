@@ -1,7 +1,7 @@
 TARGETS=Tensor
 
-CXX=g++ -Wno-write-strings
-CCFLAGS=-Wall -g -O3
+CXX=g++ -std=gnu++11 -Wno-write-strings
+CCFLAGS=-Wall -g -O3 
 
 # check the OS typing and set the flags depending
 # on it

@@ -159,8 +159,16 @@ void readVelocityField(std::string path){
 	p = path.substr(0, pos);
 	p.append("velocity.raw");
 		
-	velocityField = (Vector ***)AllocArray3D(slices, rows, cols, sizeof(Vector) ) ;	
+	//velocityField = (Vector ***)AllocArray3D(slices, rows, cols, sizeof(Vector) ) ;	
 	
+	velocityField  = (Vector***) calloc(slices * sizeof(Vector**),1);
+	for(int i = 0; i < slices; i++){
+		velocityField[i] = (Vector**)calloc(rows * sizeof(Vector*), 1);
+		for(int j = 0; j < rows; j++){
+			velocityField[i][j] = (Vector*)calloc(cols*sizeof(Vector),1);
+		}
+	}
+
 	FILE* fin = fopen(p.c_str(), "rb") ;
 	if(fin == NULL){
 		printf("Can't open velocity file.\n") ;
@@ -398,7 +406,7 @@ void readData(){
 	
 	printf("%d %d %d\n",rows,cols,slices);
 	
-	//readVelocityField(parameters) ;
+	readVelocityField(parameters) ;
 	readEigenValues(parameters) ;
 	readEigenvectorField(parameters) ;
 	

@@ -103,7 +103,7 @@ bool Streamline::DerivativeAtPosition(Vector CurrPos, Vector& vDerivative){
 		return false;	
 
 	// get four corners of the first XY plane
-	//int index = iZMin*ROWS*COLS + iYMin*rows +
+
 	Vector v1 =  vectorField[iZMin][iYMin][iXMin] ;
 	Vector v2 =  vectorField[iZMin][iYMin][iXMax] ;
 	Vector v3 =  vectorField[iZMin][iYMax][iXMin] ;

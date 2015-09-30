@@ -606,9 +606,7 @@ void display()
 	glMatrixMode(GL_MODELVIEW) ;
 	glLoadIdentity ();             /* clear the matrix */
       
-      	std::cout << "display before lookat" << std::endl;
-
-/* viewing transformation  */
+	/* viewing transformation  */
 	gluLookAt(0.0, 0.0, volRenderer.projector.vSourceLocation.VectorZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	
 	//volRenderer.RenderVolImage() ;			// render the volume image 
@@ -631,8 +629,6 @@ void display()
 	float ty = (rows)*boxLenY/2 ;
 	float tx = (cols)*boxLenX/2 ;		
 	
-	std::cout << "display after box" << std::endl;
-
 	glTranslatef(-tx, -ty, -tz) ;
 
 	streamlines.RenderStreamlines(eigenfloats) ;		// display streamlines
@@ -640,7 +636,6 @@ void display()
 	if(vectorField.bVisible){
 		if(shift){
 			if(!vectorField.rendered){
-				printf("render\n");
 				vectorField.RenderSlice();
 			}
 			vectorField.drawQuadric(shift) ;

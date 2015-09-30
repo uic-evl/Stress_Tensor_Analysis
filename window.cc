@@ -122,7 +122,7 @@ bool createWindow(int argc, char ** argv)
 void startApplication(int argc, char ** argv)
 {
 	readData() ;			// read a vector field of size slices, rows AND cols
-	read_spec("/Users/timothy/Dropbox/EVL/projects/Stress_Tensor_Analysis/spec");
+	read_spec("./spec");
 	lighting_setup();
 	
 	double boxLenX = volRenderer.params.CtFileVoxelSpacing.VectorX ;

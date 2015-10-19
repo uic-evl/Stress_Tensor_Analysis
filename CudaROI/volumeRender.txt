@@ -1,0 +1,9 @@
+./main Starting...
+
+Read './data/divergence.raw', 14527496 bytes
+Read './data/ds2_clust3_ushort.raw', 14452612 bytes
+Press '+' and '-' to change density (0.01 increments)
+      ']' and '[' to change brightness
+      ';' and ''' to modify transfer function offset
+      '.' and ',' to modify transfer function scale
+

@@ -1,10 +1,13 @@
-#include"Streamline.hh"
+#include "Streamline.hh"
+#include <fstream>
 
 extern GLuint createVBO(GLfloat *points, int size);
 extern GLuint compileShader(const char *vsource, const char *fsource, const char *gsource);
 extern void deleteVBO(GLuint vbo);
 extern void draw_streamlines(GLuint vbo, GLuint shader, int size, GLfloat color[3]);
 extern char *textFileRead(char *fn) ;
+
+using namespace std;	
 
 Streamline::Streamline(){
 	this->bReadyToProcess = false ;		// We are not ready to generate streamlines
@@ -19,8 +22,14 @@ Streamline::Streamline(){
 	streamlineColor[3][0] = 0.4 ; streamlineColor[3][1] = 0.4 ;	streamlineColor[3][2] = 0.4 ;	
 	//temporary selected streamline
 	streamlineColor[4][0] = 0.5 ; streamlineColor[4][1] = 0.5 ;	streamlineColor[4][2] = 0.5 ;		
+
+	this->myfile.open ("streamlinePoints.txt", std::ofstream::out);
 } 
 
+
+Streamline::~Streamline(){
+	this->myfile.close();
+}
 void Streamline::SetSpacing(float dx, float dy, float dz){
 	this->boxLenX = dx ;
 	this->boxLenY = dy ;
@@ -234,6 +243,8 @@ bool Streamline::RK4Method(Vector CurrPos, Vector& NextPos, float fStepSize){
 	NextPos.Add(vK2);						// NextPos = CurrPos + (1/6)K1 + (1/3)K2
 	NextPos.Add(vK3);						// NextPos = CurrPos + (1/6)K1 + (1/3)K2 + (1/3)K3 
 	NextPos.Add(vK4);						// NextPos = CurrPos + (1/6)K1 + (1/3)K2 + (1/3)K3 + (1/6)K4
+
+	this->myfile << NextPos.X() << "," << NextPos.Y() << "," << NextPos.Z() << "\n";
 
 	return true;
 }

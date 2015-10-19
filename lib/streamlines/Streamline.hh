@@ -3,6 +3,8 @@
 #include "../open_gl.hh"
 #include <cmath>
 #include <iostream>
+#include <fstream>
+
 #include <vector>
 
 #include "../vector/Point.hh"
@@ -41,8 +43,10 @@ class Streamline
 		
 		GLuint StreamlineDisplayListIndex ;	// each streamline will be compiled in a display list. The display list index
 											// starting point is saved in streamlineDisplayListIndex. So, streamlineDisplayListIndex is
-											// is the index for first streamline, streamlineDisplayListIndex+1 is the index for the second
+									// is the index for first streamline, streamlineDisplayListIndex+1 is the index for the second
 											// streamline and so on.
+		std::ofstream myfile;
+
 		GLuint TempSelectedStreamline ;		// this is display list index of he streamline over which left-button 
 											// down mouse cursor is hovering. Note, only one streamline can be selected in this way
 		GLuint SelectedStreamlines[MAX_NUMBER_STREAMLINE] ;		//permanently selected streamlines. 0 if the streamline is not selected
@@ -66,7 +70,7 @@ class Streamline
 		std::vector<Vector*> stream_pts; // integrated points
 
 	Streamline(void) ;
-    ~Streamline(void){}
+    	~Streamline(void);
 
 	void SetVectorField( Vector*** vf, int slices, int rows, int cols){
 		this->vectorField = vf ;

@@ -86,9 +86,9 @@ float4 mul(const float3x4 &M, const float4 &v)
 
 __device__
 float4 color_interpolate_cluster(float sample){
-	
+
 	// ACCENT
-	
+
 	// if(sample <= 1)
 	// 	return make_float4((float)0.99215,(float)0.75294, (float)0.52549, 1.0);
 	// else if(sample <= 2)
@@ -97,9 +97,9 @@ float4 color_interpolate_cluster(float sample){
 	// 	return make_float4((float)0.74509,(float)0.68235, (float)0.83137, 1.0);
 	// else if(sample <= 4)
 	// 	return make_float4(1.0,1.0,1.0,1.0);
-	
+
 	// Dark2
-	
+
 	if(sample <= 1)
 		return make_float4( 0.8509803921569,0.3725490196078,0.007843137254902, 1.0);
 	else if(sample <= 2)
@@ -108,78 +108,78 @@ float4 color_interpolate_cluster(float sample){
 		return make_float4( 0.4588235294118,0.4392156862745,0.7019607843137, 1.0);
 	else if(sample <= 4)
 		return make_float4(1.0,1.0,1.0,1.0);
-	
-	return make_float4(0.0,0.0,0.0,0.0);	
+
+	return make_float4(0.0,0.0,0.0,0.0);
 }
-__device__ 
+__device__
 float4 color_interpolate_large(float sample, float4 one, float4 two, float4 three,
 				float4 four, float4 five, float4 six){
-	
+
 	float4 retcolor = make_float4(0);
-	float percent = 0.0f; 
-		
+	float percent = 0.0f;
+
 	if(sample <= 0.2f){
-	
+
 		percent = (0.2f - sample) / 0.2f;
 		retcolor = (percent)*one + (1.0f-percent) * two;
-		
+
 	}else if(sample > 0.2f && sample <= 0.3f){
-		
+
 		percent = (0.3f - sample)  / 0.1f;
 		retcolor = (percent)*two + (1.0f-percent) * three;
-		
+
 	}else if(sample > 0.3f && sample <= 0.4f){
-		
+
 		percent = (0.4f - sample) / 0.1f;
 		retcolor = (percent)*three + (1.0f-percent) * four;
-		
+
 	}else if(sample > 0.4f && sample <= 0.5f){
-		
+
 		percent = (0.5f - sample) / 0.1f;
 		retcolor = (percent)*four + (1.0f-percent) * five;
-		
+
 	}else{
-		
+
 		percent = (1.0 - sample) / 0.5f;
 		retcolor = (percent)*five + (1.0f-percent) * six;
 	}
-	
-	return retcolor;	
+
+	return retcolor;
 }
-__device__ 
+__device__
 float4 color_interpolate(float sample, float4 one, float4 two, float4 three,
 				float4 four, float4 five, float4 six){
-	
+
 	float4 retcolor = make_float4(0);
-	float percent = 0.0f; 
-		
+	float percent = 0.0f;
+
 	if(sample <= 25500.0f){
-	
+
 		percent = (25500.0f - sample) / 25500.0f;
 		retcolor = (percent)*one + (1.0f-percent) * two;
-		
+
 	}else if(sample > 25500.0f && sample <= 26500.0f){
-		
+
 		percent = (26500.0f - sample)  / 1000.0f;
 		retcolor = (percent)*two + (1.0f-percent) * three;
-		
+
 	}else if(sample > 26500.0f && sample <= 27500.0f){
-		
+
 		percent = (27500.0f - sample) / 1000.0f;
 		retcolor = (percent)*three + (1.0f-percent) * four;
-		
+
 	}else if(sample > 27500.0f && sample <= 28500.0f){
-		
+
 		percent = (28500.0f - sample) / 1000.0f;
 		retcolor = (percent)*four + (1.0f-percent) * five;
-		
+
 	}else{
-		
+
 		percent = (65535.0f - sample) / 65535.0f;
 		retcolor = (percent)*five + (1.0f-percent) * six;
 	}
-	
-	return retcolor;	
+
+	return retcolor;
 }
 
 __device__ uint rgbaFloatToInt(float4 rgba, float global_max, float red, float green, float blue)
@@ -188,14 +188,14 @@ __device__ uint rgbaFloatToInt(float4 rgba, float global_max, float red, float g
     rgba.y = rgba.y / (global_max+2);
     rgba.z = rgba.z / (global_max+2);
 	rgba.w = 0.5;
-	
+
     return (uint(rgba.w*255)<<24) | (uint(rgba.z*255)<<16) | (uint(rgba.y*255)<<8) | uint(rgba.x*255);
 }
 
 __global__ void
 d_render(float4 *d_iColors, ushort *data,
  						float *d_iRed, float *d_iGreen, float *d_iBlue, uint imageW, uint imageH,
-     					float density, float brightness, float4 one, float4 two, float4 three, 
+     					float density, float brightness, float4 one, float4 two, float4 three,
 						float4 four, float4 five, float4 six, int type)
 {
     const int maxSteps = 500;
@@ -230,7 +230,7 @@ d_render(float4 *d_iColors, ushort *data,
     float sample = 0;
 
     for(int i=0; i<maxSteps; i++) {
-        
+
 		// read from 3D texture
        // remap position to [0, 1] coordinates
   		if(type == 0)
@@ -253,14 +253,14 @@ d_render(float4 *d_iColors, ushort *data,
 
         t += tstep;
         if (t > tfar) break;
-		
+
         pos += step;
     }
 
     sum *= brightness;
 
     d_iColors[y*imageW + x] = sum;
- 
+
     d_iRed[y*imageW + x] = sum.x;
     d_iGreen[y*imageW + x] = sum.y;
     d_iBlue[y*imageW + x] = sum.z;
@@ -274,10 +274,10 @@ void create_image(uint *output, float4 *d_iColors, float global_max, float red, 
     if ((x >= imageW) || (y >= imageH)) return;
 
     output[y*imageH+x] = rgbaFloatToInt(d_iColors[y*imageW+x], global_max, red, green, blue);
-} 
+}
 
 void setup_cluster(void *cluster, cudaExtent volumeSize, uint image_size, cudaArray *d_volumeArray_cluster){
-	
+
 	// Cluster setup
 
 		// create 3D array
@@ -290,7 +290,7 @@ void setup_cluster(void *cluster, cudaExtent volumeSize, uint image_size, cudaAr
 		copyParams.dstArray = d_volumeArray_cluster;
 		copyParams.extent   = volumeSize;
 		copyParams.kind     = cudaMemcpyHostToDevice;
-		cutilSafeCall( cudaMemcpy3D(&copyParams) );  
+		cutilSafeCall( cudaMemcpy3D(&copyParams) );
 
 		// set texture parameters
 		tex_cluster.normalized = true;                      // access with normalized texture coordinates
@@ -300,11 +300,11 @@ void setup_cluster(void *cluster, cudaExtent volumeSize, uint image_size, cudaAr
 
 		// bind array to 3D texture
 		cutilSafeCall(cudaBindTextureToArray(tex_cluster, d_volumeArray_cluster, channelDesc_cluster));
-	
+
 }
 
 void setup_volume(void *h_volume, cudaExtent volumeSize, uint image_size, cudaArray *d_volumeArray){
-	
+
 	// create 3D array
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<VolumeType>();
     cutilSafeCall( cudaMalloc3DArray(&d_volumeArray, &channelDesc, volumeSize) );
@@ -315,7 +315,7 @@ void setup_volume(void *h_volume, cudaExtent volumeSize, uint image_size, cudaAr
     copyParams.dstArray = d_volumeArray;
     copyParams.extent   = volumeSize;
     copyParams.kind     = cudaMemcpyHostToDevice;
-    cutilSafeCall( cudaMemcpy3D(&copyParams) );  
+    cutilSafeCall( cudaMemcpy3D(&copyParams) );
 
     // set texture parameters
     tex.normalized = true;                      // access with normalized texture coordinates
@@ -327,15 +327,15 @@ void setup_volume(void *h_volume, cudaExtent volumeSize, uint image_size, cudaAr
     cutilSafeCall(cudaBindTextureToArray(tex, d_volumeArray, channelDesc));
 }
 
-void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint *d_cluster, float* d_iRed, float* d_oRed, 
-						float* d_iGreen, float* d_oGreen, float* d_iBlue, float* d_oBlue, float4* d_iColors, unsigned short* data, 
-						unsigned short *cluster_data, uint imageW, uint imageH, float density, float brightness, 
+void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint *d_cluster, float* d_iRed, float* d_oRed,
+						float* d_iGreen, float* d_oGreen, float* d_iBlue, float* d_oBlue, float4* d_iColors, unsigned short* data,
+						unsigned short *cluster_data, uint imageW, uint imageH, float density, float brightness,
 						float4 one, float4 two, float4 three, float4 four, float4 five, float4 six,
 						void *h_volume, void *cluster, cudaExtent volumeSize, cudaArray *d_volumeArray, cudaArray *d_volumeArray_cluster, int *set)
-{	
-		
+{
+
 	int size = imageH * imageW;
-	
+
 	if(set[0] == 0){
 		setup_volume(h_volume, volumeSize, size, d_volumeArray);
 		set[0] = 1;
@@ -346,30 +346,30 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint *d_cluste
 	}
 	/* clear colors buffers */
 
-	cutilSafeCall(cudaMemset(d_iColors, 0, imageH*imageW*sizeof(float4)));	
-	
-	cutilSafeCall(cudaMemset(d_iRed, 0, imageH*imageW*sizeof(float)));	
-	cutilSafeCall(cudaMemset(d_oRed, 0, imageH*imageW*sizeof(float)));	
-	cutilSafeCall(cudaMemset(d_iGreen, 0, imageH*imageW*sizeof(float)));	
+	cutilSafeCall(cudaMemset(d_iColors, 0, imageH*imageW*sizeof(float4)));
+
+	cutilSafeCall(cudaMemset(d_iRed, 0, imageH*imageW*sizeof(float)));
+	cutilSafeCall(cudaMemset(d_oRed, 0, imageH*imageW*sizeof(float)));
+	cutilSafeCall(cudaMemset(d_iGreen, 0, imageH*imageW*sizeof(float)));
 	cutilSafeCall(cudaMemset(d_oGreen, 0, imageH*imageW*sizeof(float)));
-	cutilSafeCall(cudaMemset(d_iBlue, 0, imageH*imageW*sizeof(float)));	
+	cutilSafeCall(cudaMemset(d_iBlue, 0, imageH*imageW*sizeof(float)));
 	cutilSafeCall(cudaMemset(d_oBlue, 0, imageH*imageW*sizeof(float)));
 
-	d_render<<<gridSize, blockSize>>>(d_iColors, data, d_iRed, d_iGreen, d_iBlue, imageW, imageH, density, brightness, 
+	d_render<<<gridSize, blockSize>>>(d_iColors, data, d_iRed, d_iGreen, d_iBlue, imageW, imageH, density, brightness,
 						one, two, three, four, five, six, 0);
 
 	float max_red = reduce_max(d_oRed, d_iRed, size);
 	float max_green = reduce_max(d_oGreen, d_iGreen, size);
 	float max_blue = reduce_max(d_oBlue, d_iBlue, size);
-	
+
 	float global_max = fmax(max_red, max_green);
 	global_max = fmax(global_max, max_blue);
-	
+
 	create_image<<<gridSize, blockSize>>>(d_output, d_iColors, global_max, max_red, max_green, max_blue, imageW, imageH);
-	
+
 	// render image
-	// 
-	d_render<<<gridSize, blockSize>>>(d_iColors, cluster_data, d_iRed, d_iGreen, d_iBlue, imageW, imageH, density, brightness, 
+	//
+	d_render<<<gridSize, blockSize>>>(d_iColors, cluster_data, d_iRed, d_iGreen, d_iBlue, imageW, imageH, density, brightness,
 					one, two, three, four, five, six, 1);
 
 	max_red = reduce_max(d_oRed, d_iRed, size);
@@ -379,7 +379,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint *d_cluste
 	global_max = fmax(max_red, max_green);
 	global_max = fmax(global_max, max_blue);
 
-	create_image<<<gridSize, blockSize>>>(d_cluster, d_iColors, global_max, max_red, max_green, max_blue, imageW, imageH);	  
+	create_image<<<gridSize, blockSize>>>(d_cluster, d_iColors, global_max, max_red, max_green, max_blue, imageW, imageH);
 }
 void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix)
 {
